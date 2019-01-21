@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="fbox"></div>
+    <script>
+        var tmp_data = {
+            "code": 0,
+            "msg": "查询数据成功",
+            "data": [{
+                "id": 1,
+                "typename": "A分类",
+                "fid": 0
+            }, {
+                "id": 2,
+                "typename": "B分类",
+                "fid": 0
+            }, {
+                "id": 3,
+                "typename": "C分类",
+                "fid": 0
+            }, {
+                "id": 4,
+                "typename": "D分类",
+                "fid": 0
+            }, {
+                "id": 5,
+                "typename": "A-1分类",
+                "fid": 1
+            }, {
+                "id": 6,
+                "typename": "B-2分类",
+                "fid": 2
+            }, {
+                "id": 7,
+                "typename": "E分类",
+                "fid": 0
+            }, {
+                "id": 8,
+                "typename": "F分类",
+                "fid": 0
+            }, {
+                "id": 9,
+                "typename": "B-2-1分类",
+                "fid": 6
+            }, {
+                "id": 10,
+                "typename": "B-2-1-1分类",
+                "fid": 9
+            }]
+        }
+
+        var data=tmp_data.data;
+        var farr=[];
+        //将所有顶级分类放入farr中
+        for(let i in data){
+            if(data[i].fid==0){
+                farr.push(data[i]);
+            }
+        }
+        for(let i in farr){
+            find(farr[i].id,farr[i]);
+        }
+
+        //查找子集的函数
+        function find(id,obj){
+            let arr=[];
+            for(let i in data){
+                if(data[i].fid==id){
+                    arr.push(data[i])
+                }
+            }
+                if(arr.length!=0){
+                    for(let j in arr){
+                        find(arr[j].id,arr[j])
+                    }
+                    obj.child=arr;
+                }else{
+                    return;
+                }
+              
+        }
+
+        var html='';
+
+        for(let i in farr){
+            xuanran(farr[i]);
+        }
+        //渲染页面的方法
+        function xuanran(obj){
+            let child=obj.child;
+            if(child){
+                for(let i in child){
+                    html+=`<li>${obj.typename}<ul>`
+                        xuanran(child[i]);
+                }
+                html+='</ul></li>'
+            }else{
+                html += '<li>' + obj.typename + '</li>';
+            }
+        }
+
+        fbox.innerHTML= html;
+    </script>
+</body>
+</html>
